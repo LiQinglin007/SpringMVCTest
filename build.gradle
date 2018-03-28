@@ -1,0 +1,160 @@
+group 'com.xiaomi.SpringMVCTest'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'war'
+
+//sourceCompatibility = 1.8
+// 指定JDK版本
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+ext {
+    jvmVersion = "1.8"
+    springVersion = "4.0.6.RELEASE"
+    sl4jVersion = "1.7.6"
+}
+repositories {
+    mavenCentral()
+    maven { url "http://repo.spring.io/release" }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    compile 'org.springframework:spring-context:4.3.9.RELEASE'
+    compile 'org.springframework:spring-webmvc:4.3.9.RELEASE'
+    compile 'com.google.code.gson:gson:2.8.2'
+    compile 'mysql:mysql-connector-java:5.1.24'
+
+    compile 'commons-io:commons-io:2.5'
+
+//    compile 'commons-fileupload:commons-fileupload:1.4-SNAPSHOT'
+    compile 'commons-fileupload:commons-fileupload:1.3.2'
+    compile 'org.apache.commons:commons-lang3:3.5'
+    //    providedRuntime 'javax.servlet:jstl:1.2'    // 运行时
+//    compile 'javax.servlet:jst1:1.2'
+//    providedRuntime 'javax.servlet:jst1:1.2'
+    // https://mvnrepository.com/artifact/javax.servlet/jstl
+    compile group: 'javax.servlet', name: 'jstl', version: '1.2'
+
+    compile group: 'org.springframework', name: 'spring-web', version: '4.3.7.RELEASE'
+    compile group: 'org.springframework', name: 'spring-context', version: '4.3.7.RELEASE'
+    compile group: 'org.springframework', name: 'spring-core', version: '4.3.7.RELEASE'
+    compile group: 'org.springframework', name: 'spring-beans', version: '4.3.7.RELEASE'
+    compile group: 'org.springframework', name: 'spring-webmvc', version: '4.3.7.RELEASE'
+    compile group: 'org.springframework', name: 'spring-context-support', version: '4.3.7.RELEASE'
+    compile group: 'org.glassfish.web', name: 'javax.servlet.jsp.jstl', version: '1.2.4'
+
+    compile group: 'commons-fileupload', name: 'commons-fileupload', version: '1.3.1'
+
+//    //common library
+//    compile 'org.slf4j:slf4j-api:1.7.13'
+//    compile 'mysql:mysql-connector-java:5.1.38'
+//    compile 'org.apache.commons:commons-pool2:2.4.2'
+//    compile 'org.apache.commons:commons-dbcp2:2.1.1'
+//    compile 'org.apache.commons:commons-lang3:3.4'
+//
+//    compile 'commons-io:commons-io:2.5'
+//    compile 'commons-beanutils:commons-beanutils:1.9.2'
+//    compile 'commons-validator:commons-validator:1.4.0'
+//    compile 'commons-fileupload:commons-fileupload:1.2.2'
+//    compile 'log4j:log4j:1.2.17'
+//    compile 'com.fasterxml.jackson.core:jackson-databind:2.7.4'
+//    compile 'com.fasterxml.jackson.core:jackson-core:2.7.4'
+//    compile 'com.fasterxml.jackson.core:jackson-annotations:2.7.4'
+//    compile 'net.sf.ezmorph:ezmorph:1.0.6'
+//    compile 'commons-collections:commons-collections:3.1'
+//    compile 'net.sf.json-lib:json-lib:2.4:jdk15'
+//    //qiniu library
+//    compile 'com.qiniu:qiniu-java-sdk:7.0.+'
+//    //quartz library
+//    compile group: 'org.quartz-scheduler', name: 'quartz', version: '2.1.1'
+//    //mybatis
+//    compile group: 'org.mybatis', name: 'mybatis', version: '3.4.0'
+//
+//    // spring library
+//    compile group: 'org.springframework', name: 'spring-core', version: '4.2.3.RELEASE'
+//    compile group: 'org.springframework', name: 'spring-beans', version: '4.2.3.RELEASE'
+//    compile group: 'org.springframework', name: 'spring-context', version: '4.2.3.RELEASE'
+//    compile group: 'org.springframework', name: 'spring-context-support', version: '4.2.3.RELEASE'
+//    compile group: 'org.springframework', name: 'spring-web', version: '4.2.3.RELEASE'
+//    compile group: 'org.springframework', name: 'spring-webmvc', version: '4.2.3.RELEASE'
+//    compile group: 'org.springframework', name: 'spring-orm', version: '4.2.3.RELEASE'
+//    compile group: 'org.springframework', name: 'spring-oxm', version: '4.2.3.RELEASE'
+//    compile group: 'org.springframework', name: 'spring-tx', version: '4.2.3.RELEASE'
+//    compile group: 'org.springframework', name: 'spring-aop', version: '4.2.3.RELEASE'
+//    compile group: 'org.springframework', name: 'spring-aspects', version: '4.2.3.RELEASE'
+//    compile group: 'org.springframework', name: 'spring-jdbc', version: '4.2.3.RELEASE'
+//    compile group: 'org.springframework', name: 'spring-expression', version: '4.2.3.RELEASE'
+//    compile group: 'org.springframework', name: 'spring-instrument', version: '4.2.3.RELEASE'
+//    compile group: 'org.springframework', name: 'spring-instrument-tomcat', version: '4.2.3.RELEASE'
+//    compile group: 'org.springframework', name: 'spring-test', version: '4.2.3.RELEASE'
+//
+    // hibernate library
+//    compile group: 'org.hibernate', name: 'hibernate-core', version: '5.0.1.Final'
+//    compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '5.0.1.Final'
+//    compile group: 'org.hibernate', name: 'hibernate-osgi', version: '5.0.1.Final'
+//    compile group: 'org.hibernate', name: 'hibernate-envers', version: '5.0.1.Final'
+//    compile group: 'org.hibernate', name: 'hibernate-c3p0', version: '5.0.1.Final'
+//    compile group: 'org.hibernate', name: 'hibernate-proxool', version: '5.0.1.Final'
+//    compile group: 'org.hibernate', name: 'hibernate-infinispan', version: '5.0.1.Final'
+//    compile group: 'org.hibernate', name: 'hibernate-ehcache', version: '5.0.1.Final'
+//    compile group: 'org.hibernate', name: 'hibernate-validator', version: '5.0.1.Final'
+//
+//    //httpclient
+//    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5'
+//
+//    //jackson library
+//    compile group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.13'
+//    compile group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13'
+//    compile group: 'org.codehaus.jackson', name: 'jackson-core-lgpl', version: '1.9.13'
+//    compile group: 'org.codehaus.jackson', name: 'jackson-mapper-lgpl', version: '1.9.13'
+//    compile group: 'org.codehaus.jackson', name: 'jackson-smile', version: '1.9.13'
+//    compile group: 'org.codehaus.jackson', name: 'jackson-mrbean', version: '1.9.13'
+//    compile group: 'org.codehaus.jackson', name: 'jackson-jaxrs', version: '1.9.13'
+//
+//    //jersey library
+//    compile group: 'com.sun.jersey', name: 'jersey-core', version: '1.19.1'
+//    compile group: 'com.sun.jersey', name: 'jersey-client', version: '1.19.1'
+//    compile group: 'com.sun.jersey', name: 'jersey-json', version: '1.19.1'
+//    //compile group: 'com.sun.jersey', name: 'jersey-spring', version: '1.0'
+//
+//    //dubbo
+//    compile group: 'com.alibaba', name: 'dubbo', version: '2.5.3'
+//    //javassist
+//    compile group: 'org.javassist', name: 'javassist', version: '3.20.0-GA'
+//    //netty
+//    compile group: 'org.jboss.netty', name: 'netty', version: '3.2.10.Final'
+//    //zookeeper
+//    compile group: 'org.apache.zookeeper', name: 'zookeeper', version: '3.4.8', ext: 'pom'
+//    //hessian
+//    compile group: 'com.caucho', name: 'hessian', version: '4.0.38'
+//    //validation
+//    compile group: 'javax.validation', name: 'validation-api', version: '1.1.0.Final'
+//
+//    //Shiro
+//    compile group: 'org.apache.shiro', name: 'shiro-core', version: '1.2.5'
+//    compile group: 'org.apache.shiro', name: 'shiro-web', version: '1.2.5'
+//    compile group: 'org.apache.shiro', name: 'shiro-ehcache', version: '1.2.5'
+//    compile group: 'org.apache.shiro', name: 'shiro-spring', version: '1.2.5'
+//    compile group: 'org.apache.shiro', name: 'shiro-guice', version: '1.2.5'
+//    compile group: 'org.apache.shiro', name: 'shiro-all', version: '1.2.5'
+//    compile group: 'org.apache.shiro', name: 'shiro-cas', version: '1.2.5'
+//    compile group: 'org.apache.shiro', name: 'shiro-aspectj', version: '1.2.5'
+//    compile group: 'org.apache.shiro', name: 'shiro-quartz', version: '1.2.5'
+//    compile group: 'org.apache.shiro', name: 'shiro-features', version: '1.2.5'
+//    compile group: 'org.apache.shiro', name: 'shiro-support', version: '1.2.5'
+//    compile group: 'org.apache.shiro', name: 'shiro-root', version: '1.2.5'
+//    compile group: 'org.apache.shiro', name: 'shiro-groovy', version: '1.1.0'
+//
+//
+//
+//    providedCompile 'javax.servlet:javax.servlet-api:3.0.1' // 编译期
+//    providedRuntime 'javax.servlet:jstl:1.2'    // 运行时
+//
+//    testCompile 'junit:junit:4.12'
+
+    compile group: 'org.mybatis', name: 'mybatis', version: '3.4.5'
+}
+
