@@ -60,6 +60,9 @@ dependencies {
 //    compile 'commons-validator:commons-validator:1.4.0'
 //    compile 'commons-fileupload:commons-fileupload:1.2.2'
 //    compile 'log4j:log4j:1.2.17'
+    // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
+    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.11.0'
+
 //    compile 'com.fasterxml.jackson.core:jackson-databind:2.7.4'
 //    compile 'com.fasterxml.jackson.core:jackson-core:2.7.4'
 //    compile 'com.fasterxml.jackson.core:jackson-annotations:2.7.4'

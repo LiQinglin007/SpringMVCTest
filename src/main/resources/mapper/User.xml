@@ -35,4 +35,27 @@
     SELECT * FROM user
   </select>
 
+
+    <!--分页查询  拼接sql语句   这里的parameterType  可以传递进来String等基本数据类型、自定义bean、List、数组、map-->
+    <!--这里还支持java的运算符当然也有自己的运算符号  比如  and、or、mob、in、not in-->
+    <!--取值的话  list就写list  数组就写array  map就写_parameter   bean和String下边有-->
+    <!--具体使用规则查看main/webapp/static中的图片-->
+    <!--&#45;&#45;         这里写怎么取值  如果是传递进来的Bean类型  就直接写属性名  使用的话就直接使用#{属性名}-->
+    <select id="selectByPage" parameterType="com.xiaomi.utils.PageBean" resultMap="UserResult">
+        SELECT * FROM user limit #{startIndex} , #{pageSize}
+    </select>
+
+    <!--&#45;&#45;         这里写怎么取值  如果是传递进来的String类型  就直接写_parameter  使用的话就直接使用#{取出来的值}-->
+    <select id="selectByName" parameterType="String" resultMap="UserResult">
+        SELECT * FROM user WHERE UserName LIKE #{_parameter}
+    </select>
+
+    <delete id="deleteById" parameterType="int">
+        DELETE FROM user WHERE UserId = #{_paeameter}
+    </delete>
+
+    <update id="updateById" parameterType="com.xiaomi.bean.UserBean">
+        UPDATE  user set UserName =#{userName} WHERE UserId=#{userId}
+    </update>
+
 </mapper>

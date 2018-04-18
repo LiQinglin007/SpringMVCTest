@@ -13,6 +13,7 @@ import com.xiaomi.utils.CheckStringEmptyUtils;
 
 import com.xiaomi.utils.JSONUtils;
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,6 +24,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.WeakHashMap;
 
@@ -43,7 +46,7 @@ public class MainController {
     }
 
     @RequestMapping("/login")
-    public void Login(HttpServletResponse response,String phone,String password){
+    public void Login(HttpServletResponse response, String phone, String password) {
         response.setHeader("Content-type", "textml;charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=utf-8");
@@ -222,8 +225,12 @@ public class MainController {
         writer.print(gson.toJson(mBean));
         writer.flush();
         writer.close();
+
         return gson.toJson(mBean);
     }
+
+
+
 
     /**
      * 这里写一点Gson的用法
@@ -231,8 +238,6 @@ public class MainController {
      * @param args
      */
     public static void main(String[] args) {
-
-//
 //        /**
 //         * 把Bean转换成json
 //         */
@@ -251,6 +256,7 @@ public class MainController {
 //        Gson gson1 = new Gson();
 //        AppBean BeanFromJson = gson1.fromJson(BeanToJson, AppBean.class);
 //        System.out.println("BeanFromJson:" + BeanFromJson.toString());
+
     }
 
 
