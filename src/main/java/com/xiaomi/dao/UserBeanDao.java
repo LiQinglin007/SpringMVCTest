@@ -6,14 +6,16 @@ import com.xiaomi.db.DBtools;
 import com.xiaomi.utils.DBUtils;
 import com.xiaomi.utils.PageBean;
 import org.apache.ibatis.session.SqlSession;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
+
 
 public class UserBeanDao {
+    static SqlSession sqlSession = null;
 
     /**
      * 分页查询用户  原生的idbc写法
@@ -51,7 +53,6 @@ public class UserBeanDao {
      */
     public static List<UserBean> getUserList() {
         List<UserBean> mList = new ArrayList<>();
-        SqlSession sqlSession = null;
         try {
             //拿到数据库连接
             sqlSession = DBtools.getSqlSession();
@@ -66,7 +67,7 @@ public class UserBeanDao {
     }
 
     /**
-     * 使用框架查询
+     * 使用框架  分页查询
      *
      * @param page
      * @param size
@@ -74,7 +75,6 @@ public class UserBeanDao {
      */
     public static List<UserBean> getUserListByMyBatis(int page, int size) {
         List<UserBean> mList = new ArrayList<>();
-        SqlSession sqlSession = null;
         try {
             sqlSession = DBtools.getSqlSession();
             mList = sqlSession.selectList("User.selectByPage", new PageBean((page - 1) * size, size));
@@ -86,10 +86,14 @@ public class UserBeanDao {
         return mList;
     }
 
-
+    /**
+     * 按用户名称查询
+     *
+     * @param userName
+     * @return
+     */
     public static List<UserBean> getUserByName(String userName) {
         List<UserBean> mList = new ArrayList<>();
-        SqlSession sqlSession = null;
         try {
             sqlSession = DBtools.getSqlSession();
             mList = sqlSession.selectList("User.selectByName", userName);
@@ -101,17 +105,57 @@ public class UserBeanDao {
         return mList;
     }
 
+    /**
+     * 按用户名称查询  批量查询
+     *
+     * @param userNameList
+     * @return
+     */
+    public static List<UserBean> selectByList(List<String> userNameList) {
+        List<UserBean> mList = new ArrayList<>();
+        try {
+            sqlSession = DBtools.getSqlSession();
+            mList = sqlSession.selectList("User.selectByNameList", userNameList);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("报错了：" + e.toString());
+        } finally {
+            if (sqlSession != null) sqlSession.close();
+        }
+        return mList;
+    }
+
+
+//    这里注意增删改要手动提交事务
+//     sqlSession.commit();
 
     /**
-     * 按用户名删除
+     * 按用户id删除
      *
      * @param userId
      */
     public static void deleteById(int userId) {
-        SqlSession sqlSession = null;
         try {
             sqlSession = DBtools.getSqlSession();
             sqlSession.selectList("User.deleteById", userId);
+            sqlSession.commit();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (sqlSession != null) sqlSession.close();
+        }
+    }
+
+    /**
+     * 批量删除
+     *
+     * @param mNameList
+     */
+    public static void deleteByNameList(List<String> mNameList) {
+        try {
+            sqlSession = DBtools.getSqlSession();
+            sqlSession.delete("User.deleteByNameList", mNameList);
+            sqlSession.commit();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -126,10 +170,10 @@ public class UserBeanDao {
      * @param UserName
      */
     public static void updateUserNameById(int userId, String UserName) {
-        SqlSession sqlSession = null;
         try {
             sqlSession = DBtools.getSqlSession();
-            sqlSession.selectList("User.updateById", new UserBean(userId, UserName));
+            sqlSession.update("User.updateById", new UserBean(userId, UserName));
+            sqlSession.commit();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -137,22 +181,28 @@ public class UserBeanDao {
         }
     }
 
-    public static void main(String[] args) {
-//        final Logger LOGGER = Logger.getLogger(String.valueOf(UserBeanDao.class));
-//        LOGGER.warning("aaaaaaaaaa");
-//
-//        // 记录debug级别的信息
-//        // 记录info级别的信息
-//        LOGGER.info("This is info message.");
-//        // 记录warn级别的信息
-//        LOGGER.info("This is warn message.");
-//        // 记录error级别的信息
 
+    final static Logger LOGGER = Logger.getLogger(String.valueOf(UserBeanDao.class));
+
+    public static void main(String[] args) {
+        LOGGER.debug("debug");
+        LOGGER.info("info");
+        LOGGER.warn("warn");
+        LOGGER.error("error");
 //        ArrayList<UserBean> userList = UserBeanDao.getUserList(1, 30);
 //      ===================================  下边是框架的用法==============
         //删除一条
-//        deleteById(8);
-        updateUserNameById(30, "小米用户7");
+        deleteById(11);
+//        updateUserNameById(30, "小米用户7");
+
+        //按名称批量删除
+//        List<String> mListName = new ArrayList<>();
+//        mListName.add("小米用户7");
+//        mListName.add("小米用户8");
+//        mListName.add("小米用户10");
+//        deleteByNameList(mListName);
+//        List<UserBean> userList = selectByList(mListName);
+
         //查询全部用户
         List<UserBean> userList = getUserList();
         //分组查询

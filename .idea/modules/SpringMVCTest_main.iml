@@ -11,9 +11,6 @@
     </facet>
     <facet type="web" name="Web Gradle : SpringMVCTest-1.0-SNAPSHOT.war">
       <configuration>
-        <descriptors>
-          <deploymentDescriptor name="web.xml" url="file://$MODULE_DIR$/../../src/main/webapp/web.xml" />
-        </descriptors>
         <webroots>
           <root url="file://D:\MyJavaWork\SpringMVCTest\src\main\webapp" relative="/" />
         </webroots>
@@ -39,11 +36,10 @@
     <orderEntry type="library" name="Gradle: javax.servlet:jstl:1.2" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework:spring-context-support:4.3.7.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: org.glassfish.web:javax.servlet.jsp.jstl:1.2.4" level="project" />
-    <orderEntry type="library" name="Gradle: org.apache.logging.log4j:log4j-core:2.11.0" level="project" />
+    <orderEntry type="library" name="Gradle: log4j:log4j:1.2.17" level="project" />
     <orderEntry type="library" name="Gradle: org.mybatis:mybatis:3.4.5" level="project" />
     <orderEntry type="library" name="Gradle: commons-logging:commons-logging:1.2" level="project" />
     <orderEntry type="library" name="Gradle: javax.servlet.jsp.jstl:jstl-api:1.2" level="project" />
-    <orderEntry type="library" name="Gradle: org.apache.logging.log4j:log4j-api:2.11.0" level="project" />
     <orderEntry type="library" name="Gradle: javax.servlet:servlet-api:2.5" level="project" />
     <orderEntry type="library" name="Gradle: javax.servlet.jsp:jsp-api:2.1" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework:spring-expression:4.3.9.RELEASE" level="project" />

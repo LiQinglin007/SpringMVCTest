@@ -37,8 +37,7 @@
           <element id="library" level="project" name="Gradle: org.springframework:spring-beans:4.3.9.RELEASE" />
           <element id="library" level="project" name="Gradle: org.springframework:spring-core:4.3.9.RELEASE" />
           <element id="library" level="project" name="Gradle: org.springframework:spring-web:4.3.9.RELEASE" />
-          <element id="file-copy" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-core/2.11.0/e6b751e02120c08702d98750f6a80bc25343b7f5/log4j-core-2.11.0.jar" />
-          <element id="file-copy" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.11.0/bede79a3f150711634a3047985517431bf6499f2/log4j-api-2.11.0.jar" />
+          <element id="file-copy" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/log4j/log4j/1.2.17/5af35056b4d257e4b64b9e8069c0746e8b08629f/log4j-1.2.17.jar" />
         </element>
       </element>
     </root>

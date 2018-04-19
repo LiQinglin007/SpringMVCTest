@@ -13,7 +13,7 @@ import com.xiaomi.utils.CheckStringEmptyUtils;
 
 import com.xiaomi.utils.JSONUtils;
 import org.apache.commons.io.FileUtils;
-import org.apache.logging.log4j.Logger;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -89,10 +89,14 @@ public class MainController {
                             mStoreIdList.add(cartBean.getStoreId());
                         }
                     }
+                    //然后通过购物车的id去查询商品
                     mGoodsList.add(GoodsDao.getAllGoodsByGoodId(cartBean.getGoodId()));
                 }
             }
 
+            //到这里就拿到了这个用户的购物车List、所有的商品List和商品所在的店铺
+
+            //然后再遍历所有的购物车和所有的商品，分一下类
             ArrayList<AppStore> mAppStoreList = new ArrayList<>();
             //遍历所有的商铺
             for (Store store : mStoreList) {

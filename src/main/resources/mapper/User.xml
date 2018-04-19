@@ -50,9 +50,32 @@
         SELECT * FROM user WHERE UserName LIKE #{_parameter}
     </select>
 
+
     <delete id="deleteById" parameterType="int">
         DELETE FROM user WHERE UserId = #{_paeameter}
     </delete>
+
+
+    <!--这里用到List  拼接sql的时候用到了foreach 标签  ，
+    如果是list或者数组   collection属性就是list  如果是map collection属性就是array
+    如果是list或者数组   index属性就是i  i就是下边      如果是map index属性就是i  这里的i表示的是key
+    如果是list或者数组   item属性就是item       如果是map index属性就是item    这里有个问题如果item是一个对象   要用item.属性名才能引用出来
+     -->
+    <!--在foreach标签里边，我们可以通过separator属性来在每两个之间添加逗号-->
+    <delete id="deleteByNameList" parameterType="java.util.List">
+        DELETE FROM user WHERE UserName IN
+        <foreach collection="list" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <select id="selectByNameList" parameterType="java.util.List" resultMap="UserResult">
+        SELECT * FROM user WHERE UserName IN
+        <foreach collection="list" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </select>
+
 
     <update id="updateById" parameterType="com.xiaomi.bean.UserBean">
         UPDATE  user set UserName =#{userName} WHERE UserId=#{userId}
