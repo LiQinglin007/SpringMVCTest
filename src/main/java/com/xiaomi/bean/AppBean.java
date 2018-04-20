@@ -3,16 +3,22 @@ package com.xiaomi.bean;
 import com.google.gson.annotations.SerializedName;
 
 public class AppBean {
-    private String msg;
-    private int code;
+    private String msg = "成功";
+    private int code = 200;
     @SerializedName("Data")
-    private Object data;
+    private Object data = null;
     private transient String message;//不想暴露给json的
 
     public AppBean(String msg, int code, Object data) {
         this.msg = msg;
         this.code = code;
         this.data = data;
+    }
+
+    public AppBean() {
+        msg = "成功";
+        code = 200;
+        data = null;
     }
 
     @Override

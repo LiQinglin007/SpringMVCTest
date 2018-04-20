@@ -5,7 +5,11 @@ import java.util.ArrayList;
 public class AppStore {
     private int StoreId;
     private String StoreName;
-    private ArrayList<Goods> mGoodList;
+    private ArrayList<Goods> mGoodList=new ArrayList<>();
+
+    public void addGoods(Goods mGood) {
+        mGoodList.add(mGood);
+    }
 
     public AppStore() {
     }
@@ -31,7 +35,8 @@ public class AppStore {
     }
 
     public void setmGoodList(ArrayList<Goods> mGoodList) {
-        this.mGoodList = mGoodList;
+        this.mGoodList.clear();
+        this.mGoodList.addAll(mGoodList);
     }
 
     @Override
@@ -42,7 +47,6 @@ public class AppStore {
                 ", mGoodList=" + mGoodList +
                 '}';
     }
-
 
 
 }

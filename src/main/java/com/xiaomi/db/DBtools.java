@@ -9,6 +9,11 @@ import java.io.IOException;
 import java.io.Reader;
 
 public class DBtools {
+//    SqlSession
+// 1\向sql语句传送参数
+//    2\执行sql语句的能力
+//    3\获取sql结果的能力
+//    4\事务的控制
 
     //创建能执行映射文件中sql的sqlSession
     public static SqlSession getSqlSession() throws IOException {

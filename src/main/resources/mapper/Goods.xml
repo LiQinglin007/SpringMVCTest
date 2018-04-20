@@ -1,0 +1,24 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Goods">
+    <resultMap id="GoodsResult" type="com.xiaomi.bean.Goods">
+        <!--商品id-->
+        <id column="GoodId" jdbcType="INTEGER" property="GoodId"></id>
+        <!--商品图片-->
+        <result column="GoodPic" javaType="VARCHAR" property="GoodPic"></result>
+        <!--单价-->
+        <result column="GoodPrice" javaType="DOUBLE" property="GoodPrice"></result>
+        <!--库存-->
+        <result column="GoodNumber" javaType="INTEGER" property="GoodNumber"></result>
+        <!--名称-->
+        <result column="GoodsName" javaType="VARCHAR" property="GoodsName"></result>
+        <!--描述-->
+        <result column="GoodsDescribe" javaType="VARCHAR" property="GoodsDescribe"></result>
+        <!--店铺id-->
+        <result column="StoreId" javaType="INTEGER" property="StoreId"></result>
+    </resultMap>
+
+
+</mapper>

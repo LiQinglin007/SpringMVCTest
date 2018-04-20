@@ -2,7 +2,6 @@ package com.xiaomi.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
-import com.mysql.jdbc.log.LogUtils;
 import com.xiaomi.bean.*;
 import com.xiaomi.dao.CartDao;
 import com.xiaomi.dao.GoodsDao;
@@ -24,10 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.WeakHashMap;
 
 
 @Controller
@@ -65,61 +61,30 @@ public class MainController {
         response.setHeader("Content-type", "textml;charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=utf-8");
-        JsonArray jsonArray = new JsonArray();
-        String msg = "成功";
-        int errorcode = 200;
+        AppBean mAppBean = new AppBean();
         if (CheckStringEmptyUtils.IsEmpty(userid)) {
-            msg = "userid是空的";
-            errorcode = -100;
-            System.out.println("userid是空的");
+            mAppBean.setMsg("userid是空的");
+            mAppBean.setCode(-100);
         } else {
-            System.out.println("userid:" + userid);
-            //先去查询所有的购物车
-            ArrayList<CartBean> cartByUserId = CartDao.getCartByUserId(1);
-            ArrayList<Goods> mGoodsList = new ArrayList<>();
-            ArrayList<Store> mStoreList = new ArrayList<>();//店铺的列表
-            ArrayList<Integer> mStoreIdList = new ArrayList<>();
-            if (cartByUserId != null) {
-                //然后根据购物车的店铺id去查询店铺
-                for (CartBean cartBean : cartByUserId) {
-                    if (!mStoreIdList.contains(cartBean.getStoreId())) {
-                        Store storeListByStoreId = StoreDao.getStoreListByStoreId(cartBean.getStoreId());
-                        if (storeListByStoreId != null) {
-                            mStoreList.add(storeListByStoreId);
-                            mStoreIdList.add(cartBean.getStoreId());
-                        }
-                    }
-                    //然后通过购物车的id去查询商品
-                    mGoodsList.add(GoodsDao.getAllGoodsByGoodId(cartBean.getGoodId()));
-                }
-            }
-
-            //到这里就拿到了这个用户的购物车List、所有的商品List和商品所在的店铺
-
-            //然后再遍历所有的购物车和所有的商品，分一下类
-            ArrayList<AppStore> mAppStoreList = new ArrayList<>();
-            //遍历所有的商铺
-            for (Store store : mStoreList) {
-                AppStore mAppStore = new AppStore();
-                mAppStore.setStoreId(store.getStoreId());
-                mAppStore.setStoreName(store.getStoreName());
-                ArrayList<Goods> mAppGoodList = new ArrayList<>();
-                //然后去查找商铺里的商品
-                for (int i = 0; i < mGoodsList.size(); ) {
-                    if (mGoodsList.get(i).getStoreId() == store.getStoreId()) {
-                        mGoodsList.get(i).setGoodNumber(CartDao.getGoodNumberByGoodId(mGoodsList.get(i).getGoodId()));
-                        mAppGoodList.add(mGoodsList.get(i));
-                        mGoodsList.remove(mGoodsList.get(i));
-                    } else {
-                        i++;
+            ArrayList<Goods> goodListByUserId = GoodsDao.getGoodListByUserId(userid);
+            ArrayList<Integer> storeIdsByUserId = GoodsDao.getStoreIdsByUserId(userid);
+            ArrayList<AppStore> mStoreList = new ArrayList<>();
+            for (int i = 0; i < storeIdsByUserId.size(); i++) {
+                AppStore storeListByStoreId = StoreDao.getStoreListByStoreId(storeIdsByUserId.get(i));
+                int size = goodListByUserId.size();
+                for (int i1 = 0; i1 < size; i1++) {
+                    if (goodListByUserId.get(i1).getStoreId() == storeIdsByUserId.get(i)) {
+                        storeListByStoreId.addGoods(goodListByUserId.get(i1));
+                        goodListByUserId.remove(i1);
+                        i1 = i1 - 1;
+                        size = goodListByUserId.size();
                     }
                 }
-                mAppStore.setmGoodList(mAppGoodList);
-                mAppStoreList.add(mAppStore);
+                mStoreList.add(storeListByStoreId);
             }
-            jsonArray = JSONUtils.getJSONArrayByList(mAppStoreList);
+            mAppBean.setData(JSONUtils.getJSONArrayByList(mStoreList));
         }
-        finalData(response, msg, errorcode, jsonArray);
+        finalData(response, mAppBean);
     }
 
 
@@ -138,10 +103,9 @@ public class MainController {
     @RequestMapping("/getDataList")
     public String getDataList(HttpServletResponse response, int page, int size) {
         ArrayList<UserBean> userList = UserBeanDao.getUserList(page, size);
-        JsonArray jsonArray = JSONUtils.getJSONArrayByList(userList);
-        String msg = "成功";
-        int errorcode = 200;
-        return finalData(response, msg, errorcode, jsonArray);
+        AppBean mAppBean = new AppBean();
+        mAppBean.setData(JSONUtils.getJSONArrayByList(userList));
+        return finalData(response, mAppBean);
     }
 
 
@@ -158,40 +122,40 @@ public class MainController {
     @ResponseBody
     @RequestMapping("/uploadFile")
     public String uploadFile(HttpServletResponse response, HttpSession session, @RequestParam(value = "file") MultipartFile file) throws IOException {
-        String realPath = "";
-        String msg = "成功";
-        int errorcode = 200;
+        AppBean mAppBean = new AppBean();
         if (file == null || file.isEmpty()) {
-            msg = "文件不能为空";
-            errorcode = -100;
+            mAppBean.setMsg("文件不能为空");
+            mAppBean.setCode(-100);
         } else {
             String RootPath = session.getServletContext().getRealPath("/");
-            realPath = "static/" + System.currentTimeMillis() + ".jpg";
+            String realPath = "static/" + System.currentTimeMillis() + ".jpg";
             FileUtils.copyInputStreamToFile(file.getInputStream(), new File(RootPath + realPath));
+            mAppBean.setData(realPath);
         }
-        return finalData(response, msg, errorcode, realPath);
+        return finalData(response, mAppBean);
     }
 
     @ResponseBody
     @RequestMapping("/uploadFiles")
     public String uploadFiles(HttpServletResponse response, HttpSession session, @RequestParam(value = "file") MultipartFile[] files) throws IOException {
         System.out.println("批量上传");
-        String realPath = "";
-        String msg = "成功";
-        int errorcode = 200;
+
+        AppBean mAppBean = new AppBean();
         if (files == null || files.length == 0) {
-            msg = "文件不能为空";
-            errorcode = -100;
+            mAppBean.setMsg("文件不能为空");
+            mAppBean.setCode(-100);
         } else {
             String RootPath = session.getServletContext().getRealPath("/");
+            String realPath = "";
             for (MultipartFile file : files) {
                 String savePath = "static/" + System.currentTimeMillis() + ".jpg";
                 FileUtils.copyInputStreamToFile(file.getInputStream(), new File(RootPath + savePath));
                 realPath += savePath + ",";
             }
+            realPath = realPath.length() > 0 ? realPath.substring(0, realPath.length() - 1) : realPath;
+            mAppBean.setData(realPath);
         }
-        realPath = realPath.length() > 0 ? realPath.substring(0, realPath.length() - 1) : realPath;
-        return finalData(response, msg, errorcode, realPath);
+        return finalData(response, mAppBean);
     }
 
     /**
@@ -209,31 +173,25 @@ public class MainController {
      * 设置最后的返回值
      *
      * @param response
-     * @param msg
-     * @param errorcode
-     * @param data
      * @return
      */
-    private String finalData(HttpServletResponse response, String msg, int errorcode, Object data) {
+    private String finalData(HttpServletResponse response, AppBean appBean) {
         PrintWriter writer = null;
         try {
             writer = response.getWriter();
         } catch (IOException e) {
-            errorcode = -100;
-            data = null;
-            msg = e.toString();
+            appBean.setCode(-100);
+            appBean.setData(null);
+            appBean.setMsg(e.toString());
             e.printStackTrace();
         }
-        AppBean mBean = new AppBean(msg, errorcode, data);
         Gson gson = new Gson();
-        writer.print(gson.toJson(mBean));
+        writer.print(gson.toJson(appBean));
         writer.flush();
         writer.close();
 
-        return gson.toJson(mBean);
+        return gson.toJson(appBean);
     }
-
-
 
 
     /**
@@ -242,6 +200,7 @@ public class MainController {
      * @param args
      */
     public static void main(String[] args) {
+
 //        /**
 //         * 把Bean转换成json
 //         */
@@ -260,6 +219,9 @@ public class MainController {
 //        Gson gson1 = new Gson();
 //        AppBean BeanFromJson = gson1.fromJson(BeanToJson, AppBean.class);
 //        System.out.println("BeanFromJson:" + BeanFromJson.toString());
+
+
+
 
     }
 

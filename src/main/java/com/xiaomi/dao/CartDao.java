@@ -1,7 +1,6 @@
 package com.xiaomi.dao;
 
 
-
 import com.xiaomi.bean.CartBean;
 import com.xiaomi.utils.DBUtils;
 
@@ -11,7 +10,7 @@ import java.util.ArrayList;
 public class CartDao {
 
     public static ArrayList<CartBean> getCartByUserId(int UserId) {
-        String sql = "select * from cart where UserId = " + UserId ;
+        String sql = "select * from cart where UserId = " + UserId;
         ResultSet resultSet = DBUtils.getResultSet(sql);
         ArrayList<CartBean> mCartList = new ArrayList<>();
         try {
@@ -34,13 +33,15 @@ public class CartDao {
         }
     }
 
+
+
     public static int getGoodNumberByGoodId(int GoodId) {
-        String sql = "select Number from cart where GoodId = " + GoodId ;
+        String sql = "select Number from cart where GoodId = " + GoodId;
         ResultSet resultSet = DBUtils.getResultSet(sql);
-        int number=-1;
+        int number = -1;
         try {
             while (resultSet.next()) {
-                 number = resultSet.getInt("Number");
+                number = resultSet.getInt("Number");
             }
             return number;
         } catch (Exception e) {
@@ -51,10 +52,4 @@ public class CartDao {
         }
     }
 
-    public static void main(String[] args) {
-        ArrayList<CartBean> cartByUserId = CartDao.getCartByUserId(1);
-        for (CartBean cartBean : cartByUserId) {
-            System.out.println(cartBean.toString());
-        }
-    }
 }
