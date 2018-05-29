@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 
 
 @Controller
@@ -66,8 +67,8 @@ public class MainController {
             mAppBean.setMsg("userid是空的");
             mAppBean.setCode(-100);
         } else {
-            ArrayList<Goods> goodListByUserId = GoodsDao.getGoodListByUserId(userid);
-            ArrayList<Integer> storeIdsByUserId = GoodsDao.getStoreIdsByUserId(userid);
+            List<Goods> goodListByUserId = GoodsDao.getGoodListByUserId(userid);
+            List<Integer> storeIdsByUserId = GoodsDao.getStoreIdsByUserId(userid);
             ArrayList<AppStore> mStoreList = new ArrayList<>();
             for (int i = 0; i < storeIdsByUserId.size(); i++) {
                 AppStore storeListByStoreId = StoreDao.getStoreListByStoreId(storeIdsByUserId.get(i));
@@ -88,6 +89,21 @@ public class MainController {
     }
 
 
+    @RequestMapping("/getShopByMyBatis")
+    public void getShopByMyBatis(HttpServletResponse response, String userid) {
+        setResponseEncoding(response);
+        AppBean mAppBean = new AppBean();
+        if (CheckStringEmptyUtils.IsEmpty(userid)) {
+            mAppBean.setMsg("userid是空的");
+            mAppBean.setCode(-100);
+        } else {
+            List<AppStore> appStoreByUserId = StoreDao.getAppStoreByUserId(userid);
+            mAppBean.setData(JSONUtils.getJSONArrayByList(appStoreByUserId));
+        }
+        finalData(response, mAppBean);
+    }
+
+
     /**
      * 分页数据
      *
@@ -102,7 +118,7 @@ public class MainController {
     @ResponseBody
     @RequestMapping("/getDataList")
     public String getDataList(HttpServletResponse response, int page, int size) {
-        ArrayList<UserBean> userList = UserBeanDao.getUserList(page, size);
+        List<UserBean> userList = UserBeanDao.getUserListByMyBatis(page, size);
         AppBean mAppBean = new AppBean();
         mAppBean.setData(JSONUtils.getJSONArrayByList(userList));
         return finalData(response, mAppBean);
@@ -201,29 +217,6 @@ public class MainController {
      */
     public static void main(String[] args) {
 
-//        /**
-//         * 把Bean转换成json
-//         */
-//        /**
-//         * 这里如果想把某个属性，在转换成jSON的时候换个名字，去对应的字段上边加上SerializedName注解，详情去AppBean里边看
-//         * 如果有没些属性，在转换成JSON的时候，不想暴露出来，就去使用transient关键字
-//         */
-//        AppBean mBean = new AppBean("失败", -100, "");
-//        Gson gson = new Gson();
-//        String BeanToJson = gson.toJson(mBean);
-//        System.out.println("BeanToGson:" + BeanToJson);
-//
-//        /**
-//         * 再把JSON转换成Bean
-//         */
-//        Gson gson1 = new Gson();
-//        AppBean BeanFromJson = gson1.fromJson(BeanToJson, AppBean.class);
-//        System.out.println("BeanFromJson:" + BeanFromJson.toString());
-
-
-
-
     }
-
 
 }

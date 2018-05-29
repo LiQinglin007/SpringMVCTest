@@ -1,0 +1,28 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Store">
+
+    <resultMap id="StoreResult" type="com.xiaomi.bean.Store">
+        <!--商店id-->
+        <id column="StoreId" jdbcType="INTEGER" property="StoreId"></id>
+        <!--商店图片-->
+        <result column="StoreName" jdbcType="VARCHAR" property="StoreName"></result>
+
+    </resultMap>
+
+    <select id="selectAll" resultMap="StoreResult">
+        SELECT * FROM store
+    </select>
+
+    <select id="selectStoreById" resultMap="StoreResult" parameterType="int">
+        SELECT * FROM store WHERE store.StoreId=#{_parameter}
+    </select>
+
+
+    <select id="selectStoreByName" resultMap="StoreResult" parameterType="String">
+        SELECT * FROM store WHERE store.StoreName=#{_parameter}
+    </select>
+
+</mapper>

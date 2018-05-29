@@ -3,22 +3,35 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="Goods">
+
     <resultMap id="GoodsResult" type="com.xiaomi.bean.Goods">
         <!--商品id-->
         <id column="GoodId" jdbcType="INTEGER" property="GoodId"></id>
         <!--商品图片-->
-        <result column="GoodPic" javaType="VARCHAR" property="GoodPic"></result>
+        <result column="GoodPic" jdbcType="VARCHAR" property="GoodPic"></result>
         <!--单价-->
-        <result column="GoodPrice" javaType="DOUBLE" property="GoodPrice"></result>
+        <result column="GoodPrice" jdbcType="DOUBLE" property="GoodPrice"></result>
         <!--库存-->
-        <result column="GoodNumber" javaType="INTEGER" property="GoodNumber"></result>
+        <result column="GoodNumber" jdbcType="INTEGER" property="GoodNumber"></result>
         <!--名称-->
-        <result column="GoodsName" javaType="VARCHAR" property="GoodsName"></result>
+        <result column="GoodName" jdbcType="VARCHAR" property="GoodsName"></result>
         <!--描述-->
-        <result column="GoodsDescribe" javaType="VARCHAR" property="GoodsDescribe"></result>
+        <result column="GoodDescribe" jdbcType="VARCHAR" property="GoodsDescribe"></result>
         <!--店铺id-->
-        <result column="StoreId" javaType="INTEGER" property="StoreId"></result>
+        <result column="StoreId" jdbcType="INTEGER" property="StoreId"></result>
     </resultMap>
 
+    <select id="selectByUserId" parameterType="int" resultMap="GoodsResult">
+--      String sql = " SELECT * FROM goods WHERE GoodId IN ( SELECT cart.`GoodId` FROM cart WHERE UserId= " + UserId + " )";
+        SELECT * FROM goods WHERE GoodId IN (SELECT  cart.GoodId FROM  cart WHERE UserId =#{_parameter})
+    </select>
 
+    <select id="getStoreIdByUserId" parameterType="int" resultType="int" >
+         SELECT StoreId FROM goods WHERE GoodId IN (SELECT  cart.GoodId FROM  cart WHERE UserId =#{_parameter}) GROUP BY goods.StoreId
+    </select>
+
+    <!--String sql = "SELECT goods.`StoreId` FROM goods WHERE GoodId IN ( SELECT cart.`GoodId` FROM cart WHERE UserId= " + UserId + " ) GROUP BY goods.`StoreId`";-->
+    <!--<select id="selectByPage" parameterType="com.xiaomi.utils.PageBean" resultMap="UserResult">-->
+        <!--SELECT * FROM user limit #{startIndex} , #{pageSize}-->
+    <!--</select>-->
 </mapper>

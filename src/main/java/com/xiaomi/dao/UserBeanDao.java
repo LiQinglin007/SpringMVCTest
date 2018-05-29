@@ -45,6 +45,27 @@ public class UserBeanDao {
         }
     }
 
+    /**
+     * 使用框架  分页查询
+     *
+     * @param page
+     * @param size
+     * @return
+     */
+    public static List<UserBean> getUserListByMyBatis(int page, int size) {
+        List<UserBean> mList = new ArrayList<>();
+        try {
+            sqlSession = DBtools.getSqlSession();
+            mList = sqlSession.selectList("User.selectByPage", new PageBean((page - 1) * size, size));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (sqlSession != null) sqlSession.close();
+        }
+        return mList;
+    }
+
+
 
     /**
      * 使用框架查询全部
@@ -66,25 +87,6 @@ public class UserBeanDao {
         return mList;
     }
 
-    /**
-     * 使用框架  分页查询
-     *
-     * @param page
-     * @param size
-     * @return
-     */
-    public static List<UserBean> getUserListByMyBatis(int page, int size) {
-        List<UserBean> mList = new ArrayList<>();
-        try {
-            sqlSession = DBtools.getSqlSession();
-            mList = sqlSession.selectList("User.selectByPage", new PageBean((page - 1) * size, size));
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (sqlSession != null) sqlSession.close();
-        }
-        return mList;
-    }
 
     /**
      * 按用户名称查询
@@ -192,7 +194,7 @@ public class UserBeanDao {
 //        ArrayList<UserBean> userList = UserBeanDao.getUserList(1, 30);
 //      ===================================  下边是框架的用法==============
         //删除一条
-        deleteById(11);
+//        deleteById(11);
 //        updateUserNameById(30, "小米用户7");
 
         //按名称批量删除

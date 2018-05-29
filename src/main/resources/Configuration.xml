@@ -24,6 +24,10 @@
 
     <mappers>
         <mapper resource="mapper/User.xml"/>
+        <mapper resource="mapper/Goods.xml"/>
+        <mapper resource="mapper/Store.xml"/>
+        <mapper resource="mapper/AppStore.xml"/>
+
     </mappers>
 
 </configuration>

@@ -24,7 +24,7 @@
 
     <resultMap type="com.xiaomi.bean.UserBean" id="UserResult">
         <!--主键用id，其他的用result-->
-        <!--columu表示数据库里边的  property表示bean里边与数据库对应的-->
+        <!--columu表示数据库里边的(结果集的列表  如果有别名就有问题了，详细参考AppStore.xml)  property表示bean里边与数据库对应的-->
         <id column="UserId" jdbcType="INTEGER" property="userId"/>
         <result column="UserName" jdbcType="VARCHAR" property="userName"/>
 
@@ -52,7 +52,7 @@
 
 
     <delete id="deleteById" parameterType="int">
-        DELETE FROM user WHERE UserId = #{_paeameter}
+        DELETE FROM user WHERE UserId = #{_parameter}
     </delete>
 
 
