@@ -76,7 +76,7 @@ public class GoodsDao {
 //        } finally {
 //            DBUtils.closeConnection();
 //        }
-        List<Integer> mStoreList = getmIGoodsDao().getStoreIdByUserId(Integer.parseInt(UserId));
+        List<Integer> mStoreList = getmIGoodsDao().selectStoreIdByUserId(Integer.parseInt(UserId));
         if (sqlSession != null) sqlSession.close();
         return mStoreList;
     }
