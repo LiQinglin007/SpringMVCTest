@@ -42,7 +42,7 @@
     <!--具体使用规则查看main/webapp/static中的图片-->
     <!--&#45;&#45;         这里写怎么取值  如果是传递进来的Bean类型  就直接写属性名  使用的话就直接使用#{属性名}-->
     <select id="selectByPage" parameterType="com.xiaomi.utils.PageBean" resultMap="UserResult">
-        SELECT * FROM user limit #{startIndex} , #{pageSize}
+        SELECT * FROM user GROUP BY  user.UserId limit #{startIndex} , #{pageSize}
     </select>
 
     <!--&#45;&#45;         这里写怎么取值  如果是传递进来的String类型  就直接写_parameter  使用的话就直接使用#{取出来的值}-->

@@ -11,9 +11,7 @@ import com.xiaomi.utils.JSONUtils;
 import org.apache.commons.io.FileUtils;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 
@@ -24,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@Controller
+@RestController
 @RequestMapping("/user")
 public class MainController {
     @RequestMapping("/hello")
@@ -44,17 +42,17 @@ public class MainController {
         response.setHeader("Content-type", "textml;charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=utf-8");
-
-
     }
 
     /**
      * 购物车
+     * <p>
+     * 不写的请求方式  默认使用get请求
      *
      * @param response
      * @param userid
      */
-    @RequestMapping("/getShop")
+    @RequestMapping(value = "/getShop", method = RequestMethod.POST)
     public void getShop(HttpServletResponse response, String userid) {
         response.setHeader("Content-type", "textml;charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
@@ -86,8 +84,9 @@ public class MainController {
     }
 
 
-    @RequestMapping("/getShopByMyBatis")
-    public void getShopByMyBatis(HttpServletResponse response, String userid) {
+    //    @RequestMapping(value = "/getShopByMyBatis", method = RequestMethod.POST)
+    @RequestMapping(value = "/getShopByMyBatis")
+    public String getShopByMyBatis(HttpServletResponse response, String userid) {
         setResponseEncoding(response);
         AppBean mAppBean = new AppBean();
         if (CheckStringEmptyUtils.IsEmpty(userid)) {
@@ -97,7 +96,7 @@ public class MainController {
             List<AppStore> appStoreByUserId = AppStoreDao.getAppStoreByUserId(userid);
             mAppBean.setData(JSONUtils.getJSONArrayByList(appStoreByUserId));
         }
-        finalData(response, mAppBean);
+        return finalData(response, mAppBean);
     }
 
 
@@ -112,12 +111,34 @@ public class MainController {
      * 返回的数据不是html标签的页面，而是其他某种格式的数据时（如json、xml等）使用.
      * 配置返回JSON和XML数据
      */
-    @ResponseBody
     @RequestMapping("/getDataList")
     public String getDataList(HttpServletResponse response, int page, int size) {
+        setResponseEncoding(response);
         List<UserBean> userList = UserBeanDao.getUserListByMyBatis(page, size);
         AppBean mAppBean = new AppBean();
         mAppBean.setData(JSONUtils.getJSONArrayByList(userList));
+        return finalData(response, mAppBean);
+    }
+
+    @RequestMapping("/deleteUserById")
+    public String deleteUserById(HttpServletResponse response, int userid) {
+        setResponseEncoding(response);
+        int i = UserBeanDao.deleteById(userid);
+        AppBean mAppBean = new AppBean();
+        if (i > 0) {
+            mAppBean.setData("删除成功");
+        } else {
+            mAppBean.setData("删除失败");
+        }
+        return finalData(response, mAppBean);
+    }
+
+    @RequestMapping("/getStoreList")
+    public String getStoreList(HttpServletResponse response, int page, int size) {
+        setResponseEncoding(response);
+        AppBean mAppBean = new AppBean();
+        List<Store> stores = StoreDao.loadListByPageAndSize(page, size);
+        mAppBean.setData(new Gson().toJson(stores));
         return finalData(response, mAppBean);
     }
 
@@ -132,7 +153,6 @@ public class MainController {
      * @throws IllegalStateException
      * @throws IOException
      */
-    @ResponseBody
     @RequestMapping("/uploadFile")
     public String uploadFile(HttpServletResponse response, HttpSession session, @RequestParam(value = "file") MultipartFile file) throws IOException {
         AppBean mAppBean = new AppBean();
@@ -148,7 +168,6 @@ public class MainController {
         return finalData(response, mAppBean);
     }
 
-    @ResponseBody
     @RequestMapping("/uploadFiles")
     public String uploadFiles(HttpServletResponse response, HttpSession session, @RequestParam(value = "file") MultipartFile[] files) throws IOException {
         System.out.println("批量上传");

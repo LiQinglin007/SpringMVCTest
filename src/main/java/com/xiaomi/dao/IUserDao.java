@@ -12,11 +12,11 @@ public interface IUserDao {
 
     List<UserBean> selectByNameList(List<String> userNameList);
 
-    void deleteById(int userId);
+    int deleteById(int userId);
 
-    void deleteByNameList(List<String> userNameList);
+    int deleteByNameList(List<String> userNameList);
 
-    void updateById(UserBean userBean);
+    int updateById(UserBean userBean);
 
     List<UserBean> selectByPage(PageBean pageBean);
 }

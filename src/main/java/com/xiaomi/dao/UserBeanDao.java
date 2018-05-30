@@ -20,10 +20,12 @@ public class UserBeanDao {
 
 
     private static IUserDao getIUserDao() {
-        if (sqlSession == null) {
+        try {
             sqlSession = DBtools.getSqlSession();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        if (iUserDao == null) {
+        if (sqlSession != null && iUserDao == null) {
             iUserDao = sqlSession.getMapper(IUserDao.class);
         }
         return iUserDao;
@@ -66,7 +68,6 @@ public class UserBeanDao {
      */
     public static List<UserBean> getUserListByMyBatis(int page, int size) {
         List<UserBean> mList = getIUserDao().selectByPage(new PageBean((page - 1) * size, size));
-        if (sqlSession != null) sqlSession.close();
         return mList;
     }
 
@@ -78,7 +79,6 @@ public class UserBeanDao {
      */
     public static List<UserBean> getUserList() {
         List<UserBean> mList = getIUserDao().selectAll();
-        if (sqlSession != null) sqlSession.close();
         return mList;
     }
 
@@ -91,7 +91,6 @@ public class UserBeanDao {
      */
     public static List<UserBean> getUserByName(String userName) {
         List<UserBean> mList = getIUserDao().selectByName(userName);
-        if (sqlSession != null) sqlSession.close();
         return mList;
     }
 
@@ -103,7 +102,6 @@ public class UserBeanDao {
      */
     public static List<UserBean> selectByList(List<String> userNameList) {
         List<UserBean> mList = getIUserDao().selectByNameList(userNameList);
-        if (sqlSession != null) sqlSession.close();
         return mList;
     }
 
@@ -116,10 +114,10 @@ public class UserBeanDao {
      *
      * @param userId
      */
-    public static void deleteById(int userId) {
-        getIUserDao().deleteById(userId);
+    public static int deleteById(int userId) {
+        int i = getIUserDao().deleteById(userId);
         sqlSession.commit();
-        if (sqlSession != null) sqlSession.close();
+        return i;
     }
 
     /**
@@ -127,10 +125,10 @@ public class UserBeanDao {
      *
      * @param mNameList
      */
-    public static void deleteByNameList(List<String> mNameList) {
-        getIUserDao().deleteByNameList(mNameList);
+    public static int deleteByNameList(List<String> mNameList) {
+        int i= getIUserDao().deleteByNameList(mNameList);
         sqlSession.commit();
-        if (sqlSession != null) sqlSession.close();
+        return i;
     }
 
     /**
@@ -139,10 +137,10 @@ public class UserBeanDao {
      * @param userId
      * @param userName
      */
-    public static void updateUserNameById(int userId, String userName) {
-        getIUserDao().updateById(new UserBean(userId, userName));
+    public static int updateUserNameById(int userId, String userName) {
+        int i= getIUserDao().updateById(new UserBean(userId, userName));
         sqlSession.commit();
-        if (sqlSession != null) sqlSession.close();
+        return i;
     }
 
 

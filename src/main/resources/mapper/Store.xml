@@ -25,4 +25,7 @@
         SELECT * FROM store WHERE store.StoreName=#{_parameter}
     </select>
 
+    <select id="selectByPageInterceptor" resultMap="StoreResult" parameterType="com.xiaomi.utils.PageBean">
+        SELECT * FROM store GROUP BY StoreId
+    </select>
 </mapper>

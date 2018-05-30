@@ -20,7 +20,11 @@ public class GoodsDao {
 
     public static IGoodsDao getmIGoodsDao() {
         if (sqlSession == null) {
-            sqlSession = DBtools.getSqlSession();
+            try {
+                sqlSession = DBtools.getSqlSession();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         if (mIGoodsDao == null) {
             mIGoodsDao = sqlSession.getMapper(IGoodsDao.class);
@@ -57,7 +61,7 @@ public class GoodsDao {
 //        }
 
         List<Goods> mGoodsList = getmIGoodsDao().selectByUserId(Integer.parseInt(UserId));
-        if (sqlSession != null) sqlSession.close();
+
         return mGoodsList;
     }
 
@@ -77,7 +81,7 @@ public class GoodsDao {
 //            DBUtils.closeConnection();
 //        }
         List<Integer> mStoreList = getmIGoodsDao().selectStoreIdByUserId(Integer.parseInt(UserId));
-        if (sqlSession != null) sqlSession.close();
+
         return mStoreList;
     }
 

@@ -6,6 +6,7 @@ import com.xiaomi.bean.AppStore;
 import com.xiaomi.bean.Store;
 import com.xiaomi.db.DBtools;
 import com.xiaomi.utils.DBUtils;
+import com.xiaomi.utils.PageBean;
 import org.apache.ibatis.session.SqlSession;
 
 import java.io.IOException;
@@ -20,7 +21,11 @@ public class StoreDao {
 
     private static IStoreDao getmIstoreDao() {
         if (sqlSession == null) {
-            sqlSession = DBtools.getSqlSession();
+            try {
+                sqlSession = DBtools.getSqlSession();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         if (mIstoreDao == null) {
             mIstoreDao = sqlSession.getMapper(IStoreDao.class);
@@ -34,7 +39,6 @@ public class StoreDao {
         mStore = new AppStore();
         mStore.setStoreName(store.getStoreName());
         mStore.setStoreId(store.getStoreId());
-        if (sqlSession != null) sqlSession.close();
 
 //        String sql = "select * from store where StoreId=" + StoreId;
 //        ResultSet resultSet = DBUtils.getResultSet(sql);
@@ -53,7 +57,11 @@ public class StoreDao {
 
     public static List<Store> loadAll() {
         List<Store> mList = getmIstoreDao().selectAll();
-        if (sqlSession != null) sqlSession.close();
+        return mList;
+    }
+
+    public static List<Store> loadListByPageAndSize(int page, int size) {
+        List<Store> mList = getmIstoreDao().selectByPageInterceptor(new PageBean((page - 1) * size, size));
         return mList;
     }
 
@@ -65,11 +73,8 @@ public class StoreDao {
      */
     public static Store getStoreByName(String storeName) {
         Store store = getmIstoreDao().selectStoreByName(storeName);
-        if (sqlSession != null) sqlSession.close();
         return store;
     }
-
-
 
 
     public static void main(String[] args) {

@@ -7,17 +7,32 @@
 <configuration>
 
     <properties resource="mysql.properties"/>
-
     <environments default="development">
+        <!-- 连接环境信息 -->
         <environment id="development">
+            <!-- mysql使用什么事物管理方式 -->
             <transactionManager type="JDBC">
                 <property name="" value=""/>
             </transactionManager>
-            <dataSource type="UNPOOLED">
+            <!-- mybatis使用连接池方式来获取连接对象
+             这里这个dataSource是连接类型  三种一共UNPOOLED\POOLED\JNDI
+             UNPOOLED:MyBatis会为每一个数据库操作 常见一个信的连接，并关闭他。改方式适用于小规模数量并发用户的简单应用程序上。
+             POOLED：MyBatis会厂家一个数据库连接池，连接池中的一个连接将会被用作数据库操作。一旦数据库操作完成，MyBatis会将次连接返回给连接池。
+                    在开发和测试环境中会经常使用这种方式。
+            JNDI:MyBatis从在次应用服务器向配置好的JNDI数据源dataSource获取数据库连接。在生产获奖中，优先考虑这种方式。
+             -->
+            <dataSource type="POOLED">
+                <!-- 配置数据库连接信息 -->
                 <property name="driver" value="${driver}"/>
                 <property name="url" value="${url}"/>
                 <property name="username" value="${username}"/>
                 <property name="password" value="${password}"/>
+
+
+                <property name="poolMaximumIdleConnections" value="0"/>
+                <property name="poolMaximumActiveConnections" value="1000"/>
+                <property name="poolPingQuery" value="SELECT 1 FROM DUAL" />
+                <property name="poolPingEnabled" value="true" />
             </dataSource>
         </environment>
     </environments>

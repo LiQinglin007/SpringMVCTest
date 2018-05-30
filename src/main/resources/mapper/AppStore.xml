@@ -5,7 +5,7 @@
     <resultMap id="AppStoreResult" type="com.xiaomi.bean.AppStore">
         <id column="mStoreId" jdbcType="INTEGER" property="StoreId"></id>
         <result column="StoreName" jdbcType="VARCHAR" property="StoreName"></result>
-        <collection property="mGoodList" resultMap="Goods.GoodsResult"></collection>
+        <collection property="mGoodList" resultMap="com.xiaomi.dao.IGoodsDao.GoodsResult"></collection>
     </resultMap>
 
     <!--这里配置一对多的关系-->
@@ -24,10 +24,8 @@
     <!--这里判断入参是不是为空  是用_parameter  不管传String 还是int  都改成_parameter来判断-->
     <select id="selectAppStoreByStoreId" resultMap="AppStoreResult" parameterType="String">
         select s.StoreId as mStoreId,s.StoreName,g.GoodName,g.GoodId,g.GoodNumber,
-
         g.GoodDescribe,g.GoodPrice,g.GoodPic,g.StoreId
         from store as s LEFT JOIN goods as g on s.StoreId=g.StoreId
-
         <where>
             <if test="_parameter != null and _parameter!=''">
                 s.StoreId=#{_parameter}
