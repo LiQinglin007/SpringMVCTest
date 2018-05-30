@@ -3,10 +3,7 @@ package com.xiaomi.controller;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.xiaomi.bean.*;
-import com.xiaomi.dao.CartDao;
-import com.xiaomi.dao.GoodsDao;
-import com.xiaomi.dao.StoreDao;
-import com.xiaomi.dao.UserBeanDao;
+import com.xiaomi.dao.*;
 import com.xiaomi.utils.CheckStringEmptyUtils;
 
 
@@ -97,7 +94,7 @@ public class MainController {
             mAppBean.setMsg("userid是空的");
             mAppBean.setCode(-100);
         } else {
-            List<AppStore> appStoreByUserId = StoreDao.getAppStoreByUserId(userid);
+            List<AppStore> appStoreByUserId = AppStoreDao.getAppStoreByUserId(userid);
             mAppBean.setData(JSONUtils.getJSONArrayByList(appStoreByUserId));
         }
         finalData(response, mAppBean);

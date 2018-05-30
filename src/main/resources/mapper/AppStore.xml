@@ -1,7 +1,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="AppStore">
+<mapper namespace="com.xiaomi.dao.IAppStoreDao">
     <resultMap id="AppStoreResult" type="com.xiaomi.bean.AppStore">
         <id column="mStoreId" jdbcType="INTEGER" property="StoreId"></id>
         <result column="StoreName" jdbcType="VARCHAR" property="StoreName"></result>

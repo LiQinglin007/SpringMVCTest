@@ -2,7 +2,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="Goods">
+<mapper namespace="com.xiaomi.dao.IGoodsDao">
 
     <resultMap id="GoodsResult" type="com.xiaomi.bean.Goods">
         <!--商品id-->
@@ -26,7 +26,7 @@
         SELECT * FROM goods WHERE GoodId IN (SELECT  cart.GoodId FROM  cart WHERE UserId =#{_parameter})
     </select>
 
-    <select id="getStoreIdByUserId" parameterType="int" resultType="int" >
+    <select id="selectStoreIdByUserId" parameterType="int" resultType="int" >
          SELECT StoreId FROM goods WHERE GoodId IN (SELECT  cart.GoodId FROM  cart WHERE UserId =#{_parameter}) GROUP BY goods.StoreId
     </select>
 

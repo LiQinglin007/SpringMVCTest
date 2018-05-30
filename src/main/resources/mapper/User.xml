@@ -20,7 +20,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="User">
+<mapper namespace="com.xiaomi.dao.IUserDao">
 
     <resultMap type="com.xiaomi.bean.UserBean" id="UserResult">
         <!--主键用id，其他的用result-->

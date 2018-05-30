@@ -16,6 +16,18 @@ import java.util.List;
 
 public class UserBeanDao {
     static SqlSession sqlSession = null;
+    static IUserDao iUserDao = null;
+
+
+    private static IUserDao getIUserDao() {
+        if (sqlSession == null) {
+            sqlSession = DBtools.getSqlSession();
+        }
+        if (iUserDao == null) {
+            iUserDao = sqlSession.getMapper(IUserDao.class);
+        }
+        return iUserDao;
+    }
 
     /**
      * 分页查询用户  原生的idbc写法
@@ -53,18 +65,10 @@ public class UserBeanDao {
      * @return
      */
     public static List<UserBean> getUserListByMyBatis(int page, int size) {
-        List<UserBean> mList = new ArrayList<>();
-        try {
-            sqlSession = DBtools.getSqlSession();
-            mList = sqlSession.selectList("User.selectByPage", new PageBean((page - 1) * size, size));
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (sqlSession != null) sqlSession.close();
-        }
+        List<UserBean> mList = getIUserDao().selectByPage(new PageBean((page - 1) * size, size));
+        if (sqlSession != null) sqlSession.close();
         return mList;
     }
-
 
 
     /**
@@ -73,17 +77,8 @@ public class UserBeanDao {
      * @return
      */
     public static List<UserBean> getUserList() {
-        List<UserBean> mList = new ArrayList<>();
-        try {
-            //拿到数据库连接
-            sqlSession = DBtools.getSqlSession();
-            //这里就拿到结果了
-            mList = sqlSession.selectList("User.selectAll");
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (sqlSession != null) sqlSession.close();
-        }
+        List<UserBean> mList = getIUserDao().selectAll();
+        if (sqlSession != null) sqlSession.close();
         return mList;
     }
 
@@ -95,15 +90,8 @@ public class UserBeanDao {
      * @return
      */
     public static List<UserBean> getUserByName(String userName) {
-        List<UserBean> mList = new ArrayList<>();
-        try {
-            sqlSession = DBtools.getSqlSession();
-            mList = sqlSession.selectList("User.selectByName", userName);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (sqlSession != null) sqlSession.close();
-        }
+        List<UserBean> mList = getIUserDao().selectByName(userName);
+        if (sqlSession != null) sqlSession.close();
         return mList;
     }
 
@@ -114,16 +102,8 @@ public class UserBeanDao {
      * @return
      */
     public static List<UserBean> selectByList(List<String> userNameList) {
-        List<UserBean> mList = new ArrayList<>();
-        try {
-            sqlSession = DBtools.getSqlSession();
-            mList = sqlSession.selectList("User.selectByNameList", userNameList);
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("报错了：" + e.toString());
-        } finally {
-            if (sqlSession != null) sqlSession.close();
-        }
+        List<UserBean> mList = getIUserDao().selectByNameList(userNameList);
+        if (sqlSession != null) sqlSession.close();
         return mList;
     }
 
@@ -137,15 +117,9 @@ public class UserBeanDao {
      * @param userId
      */
     public static void deleteById(int userId) {
-        try {
-            sqlSession = DBtools.getSqlSession();
-            sqlSession.selectList("User.deleteById", userId);
-            sqlSession.commit();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (sqlSession != null) sqlSession.close();
-        }
+        getIUserDao().deleteById(userId);
+        sqlSession.commit();
+        if (sqlSession != null) sqlSession.close();
     }
 
     /**
@@ -154,33 +128,21 @@ public class UserBeanDao {
      * @param mNameList
      */
     public static void deleteByNameList(List<String> mNameList) {
-        try {
-            sqlSession = DBtools.getSqlSession();
-            sqlSession.delete("User.deleteByNameList", mNameList);
-            sqlSession.commit();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (sqlSession != null) sqlSession.close();
-        }
+        getIUserDao().deleteByNameList(mNameList);
+        sqlSession.commit();
+        if (sqlSession != null) sqlSession.close();
     }
 
     /**
      * 修改数据
      *
      * @param userId
-     * @param UserName
+     * @param userName
      */
-    public static void updateUserNameById(int userId, String UserName) {
-        try {
-            sqlSession = DBtools.getSqlSession();
-            sqlSession.update("User.updateById", new UserBean(userId, UserName));
-            sqlSession.commit();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (sqlSession != null) sqlSession.close();
-        }
+    public static void updateUserNameById(int userId, String userName) {
+        getIUserDao().updateById(new UserBean(userId, userName));
+        sqlSession.commit();
+        if (sqlSession != null) sqlSession.close();
     }
 
 

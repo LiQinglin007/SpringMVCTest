@@ -15,7 +15,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GoodsDao {
-    static SqlSession sqlSession = null;
+    private static SqlSession sqlSession = null;
+    private static IGoodsDao mIGoodsDao = null;
+
+    public static IGoodsDao getmIGoodsDao() {
+        if (sqlSession == null) {
+            sqlSession = DBtools.getSqlSession();
+        }
+        if (mIGoodsDao == null) {
+            mIGoodsDao = sqlSession.getMapper(IGoodsDao.class);
+        }
+        return mIGoodsDao;
+    }
 
     /**
      * 通过用户id和店铺id查询购物车里边该商店的全部商品
@@ -23,7 +34,7 @@ public class GoodsDao {
      * @return
      */
     public static List<Goods> getGoodListByUserId(String UserId) {
-        List<Goods> mGoodsList = new ArrayList<>();
+//        List<Goods> mGoodsList = new ArrayList<>();
 //        String sql = " SELECT * FROM goods WHERE GoodId IN ( SELECT cart.`GoodId` FROM cart WHERE UserId= " + UserId + " )";
 //        System.out.println("sql:" + sql);
 //        ResultSet resultSet = DBUtils.getResultSet(sql);
@@ -45,20 +56,14 @@ public class GoodsDao {
 //            DBUtils.closeConnection();
 //        }
 
-        try {
-            sqlSession = DBtools.getSqlSession();
-            mGoodsList = sqlSession.selectList("Goods.selectByUserId", Integer.parseInt(UserId));
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (sqlSession != null) sqlSession.close();
-        }
+        List<Goods> mGoodsList = getmIGoodsDao().selectByUserId(Integer.parseInt(UserId));
+        if (sqlSession != null) sqlSession.close();
         return mGoodsList;
     }
 
 
     public static List<Integer> getStoreIdsByUserId(String UserId) {
-        List<Integer> mStoreList = new ArrayList<>();
+//        List<Integer> mStoreList = new ArrayList<>();
 //        String sql = "SELECT goods.`StoreId` FROM goods WHERE GoodId IN ( SELECT cart.`GoodId` FROM cart WHERE UserId= " + UserId + " ) GROUP BY goods.`StoreId`";
 //        ResultSet resultSet = DBUtils.getResultSet(sql);
 //        try {
@@ -71,14 +76,8 @@ public class GoodsDao {
 //        } finally {
 //            DBUtils.closeConnection();
 //        }
-        try {
-            sqlSession = DBtools.getSqlSession();
-            mStoreList = sqlSession.selectList("Goods.getStoreIdByUserId", Integer.parseInt(UserId));
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (sqlSession != null) sqlSession.close();
-        }
+        List<Integer> mStoreList = getmIGoodsDao().getStoreIdByUserId(Integer.parseInt(UserId));
+        if (sqlSession != null) sqlSession.close();
         return mStoreList;
     }
 
@@ -86,9 +85,9 @@ public class GoodsDao {
     public static void main(String[] args) {
         List<Goods> goodListByUserId = getGoodListByUserId("1");
         List<Integer> storeListByUserId = getStoreIdsByUserId("1");
-        if(storeListByUserId!=null&&storeListByUserId.size()!=0){
+        if (storeListByUserId != null && storeListByUserId.size() != 0) {
             for (int i = 0; i < storeListByUserId.size(); i++) {
-                System.out.println(i+":"+new Gson().toJson(storeListByUserId.get(i)));
+                System.out.println(i + ":" + new Gson().toJson(storeListByUserId.get(i)));
             }
         }
     }
