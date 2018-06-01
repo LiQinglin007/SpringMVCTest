@@ -5,6 +5,7 @@
        xmlns:mvc="http://www.springframework.org/schema/mvc"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
     <!-- 启动注解驱动的Spring MVC功能，注册请求url和注解POJO类方法的映射-->
+    <!--如果配置一个注解驱动之后，那么就可以不用配置处理器映射器和处理器适配器了-->
     <mvc:annotation-driven/>
     <!--指明controller所在的包，并扫描其中的注解-->
     <context:component-scan base-package="com.xiaomi"></context:component-scan>
@@ -14,11 +15,12 @@
     <mvc:annotation-driven></mvc:annotation-driven>
 
     <!--<mvc:resources mapping="" location=""></mvc:resources>-->
-
+    <!-- 配置视图解析器(对jsp默认解析的视图解析器) -->
     <bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <property name="prefix" value="/page/">
-        </property>
-        <property name="suffix" value=".jsp"></property>
+        <!-- prefix：前缀 -->
+        <property name="prefix" value="/page/"/>
+        <!-- suffix：后缀 -->
+        <property name="suffix" value=".jsp"/>
     </bean>
 
 

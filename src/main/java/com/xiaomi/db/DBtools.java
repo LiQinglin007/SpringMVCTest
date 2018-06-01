@@ -6,6 +6,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 
 public class DBtools {
@@ -15,30 +16,26 @@ public class DBtools {
 //    3\获取sql结果的能力
 //    4\事务的控制
 
-    //创建能执行映射文件中sql的sqlSession
-    public static SqlSession getSqlSession() throws IOException {
-        SqlSessionFactory sessionFactory = null;
-        //使用MyBatis提供的Resources类加载mybatis的配置文件
-        Reader reader = Resources.getResourceAsReader("Configuration.xml");
-        //构建sqlSession的工厂
-        sessionFactory = new SqlSessionFactoryBuilder().build(reader);
-        SqlSession sqlSession = sessionFactory.openSession();
-        return sqlSession;
+    private final static SqlSessionFactory sqlSessionFactory;
+    static {
+        String resource = "Configuration.xml";
+        Reader reader = null;
+        try {
+            reader = Resources.getResourceAsReader(resource);
+        } catch (IOException e) {
+            System.out.println(e.getMessage()+"aaa");
+        }
+        sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    }
+
+    public static SqlSessionFactory getSqlSessionFactory() {
+        return sqlSessionFactory;
     }
 
 
+
+
     public static void main(String[] args) {
-        try {
-            SqlSession sqlSession = getSqlSession();
-            if(sqlSession!=null){
-                sqlSession.close();
-                System.out.println("已经连接上了");
-            }else{
-                System.out.println("没连接上");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("没连接上"+e.toString());
-        }
+        SqlSession sqlSession = getSqlSessionFactory().openSession();
     }
 }

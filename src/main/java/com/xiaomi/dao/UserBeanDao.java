@@ -6,6 +6,7 @@ import com.xiaomi.db.DBtools;
 import com.xiaomi.utils.DBUtils;
 import com.xiaomi.utils.PageBean;
 import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
@@ -15,21 +16,8 @@ import java.util.List;
 
 
 public class UserBeanDao {
-    static SqlSession sqlSession = null;
-    static IUserDao iUserDao = null;
 
 
-    private static IUserDao getIUserDao() {
-        try {
-            sqlSession = DBtools.getSqlSession();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if (sqlSession != null && iUserDao == null) {
-            iUserDao = sqlSession.getMapper(IUserDao.class);
-        }
-        return iUserDao;
-    }
 
     /**
      * 分页查询用户  原生的idbc写法
@@ -67,7 +55,19 @@ public class UserBeanDao {
      * @return
      */
     public static List<UserBean> getUserListByMyBatis(int page, int size) {
-        List<UserBean> mList = getIUserDao().selectByPage(new PageBean((page - 1) * size, size));
+        SqlSession sqlSession = null;
+        List<UserBean> mList = new ArrayList<>();
+        try {
+            SqlSessionFactory sqlSessionFactory = DBtools.getSqlSessionFactory();
+            sqlSession = sqlSessionFactory.openSession();
+            IUserDao mapper = sqlSession.getMapper(IUserDao.class);
+            mList = mapper.selectByPage(new PageBean((page - 1) * size, size));
+            sqlSession.commit();
+        }  finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
         return mList;
     }
 
@@ -78,7 +78,17 @@ public class UserBeanDao {
      * @return
      */
     public static List<UserBean> getUserList() {
-        List<UserBean> mList = getIUserDao().selectAll();
+        SqlSession sqlSession = null;
+        List<UserBean> mList = new ArrayList<>();
+        try {
+            sqlSession = DBtools.getSqlSessionFactory().openSession();
+            mList = sqlSession.getMapper(IUserDao.class).selectAll();
+            sqlSession.commit();
+        }   finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
         return mList;
     }
 
@@ -90,7 +100,17 @@ public class UserBeanDao {
      * @return
      */
     public static List<UserBean> getUserByName(String userName) {
-        List<UserBean> mList = getIUserDao().selectByName(userName);
+        SqlSession sqlSession = null;
+        List<UserBean> mList = new ArrayList<>();
+        try {
+            sqlSession = DBtools.getSqlSessionFactory().openSession();
+            mList = sqlSession.getMapper(IUserDao.class).selectByName(userName);
+            sqlSession.commit();
+        }   finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
         return mList;
     }
 
@@ -101,7 +121,17 @@ public class UserBeanDao {
      * @return
      */
     public static List<UserBean> selectByList(List<String> userNameList) {
-        List<UserBean> mList = getIUserDao().selectByNameList(userNameList);
+        SqlSession sqlSession = null;
+        List<UserBean> mList = new ArrayList<>();
+        try {
+            sqlSession = DBtools.getSqlSessionFactory().openSession();
+            mList = sqlSession.getMapper(IUserDao.class).selectByNameList(userNameList);
+            sqlSession.commit();
+        }   finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
         return mList;
     }
 
@@ -115,8 +145,17 @@ public class UserBeanDao {
      * @param userId
      */
     public static int deleteById(int userId) {
-        int i = getIUserDao().deleteById(userId);
-        sqlSession.commit();
+        SqlSession sqlSession = null;
+        int i = 0;
+        try {
+            sqlSession = DBtools.getSqlSessionFactory().openSession();
+            i = sqlSession.getMapper(IUserDao.class).deleteById(userId);
+            sqlSession.commit();
+        }   finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
         return i;
     }
 
@@ -126,8 +165,17 @@ public class UserBeanDao {
      * @param mNameList
      */
     public static int deleteByNameList(List<String> mNameList) {
-        int i= getIUserDao().deleteByNameList(mNameList);
-        sqlSession.commit();
+        SqlSession sqlSession = null;
+        int i = 0;
+        try {
+            sqlSession = DBtools.getSqlSessionFactory().openSession();
+            i = sqlSession.getMapper(IUserDao.class).deleteByNameList(mNameList);
+            sqlSession.commit();
+        }  finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
         return i;
     }
 
@@ -138,8 +186,17 @@ public class UserBeanDao {
      * @param userName
      */
     public static int updateUserNameById(int userId, String userName) {
-        int i= getIUserDao().updateById(new UserBean(userId, userName));
-        sqlSession.commit();
+        SqlSession sqlSession = null;
+        int i = 0;
+        try {
+            sqlSession = DBtools.getSqlSessionFactory().openSession();
+            i = sqlSession.getMapper(IUserDao.class).updateById(new UserBean(userId, userName));
+            sqlSession.commit();
+        }   finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
         return i;
     }
 

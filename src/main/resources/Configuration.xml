@@ -5,15 +5,14 @@
 
 
 <configuration>
-
+    <!--去加载配置文件中的数据库连接-->
     <properties resource="mysql.properties"/>
+    <!-- 和spring整合后environments配置将废除 -->
     <environments default="development">
         <!-- 连接环境信息 -->
         <environment id="development">
             <!-- mysql使用什么事物管理方式 -->
-            <transactionManager type="JDBC">
-                <property name="" value=""/>
-            </transactionManager>
+            <transactionManager type="JDBC"/>
             <!-- mybatis使用连接池方式来获取连接对象
              这里这个dataSource是连接类型  三种一共UNPOOLED\POOLED\JNDI
              UNPOOLED:MyBatis会为每一个数据库操作 常见一个信的连接，并关闭他。改方式适用于小规模数量并发用户的简单应用程序上。
@@ -44,5 +43,6 @@
         <mapper resource="mapper/AppStore.xml"/>
 
     </mappers>
+
 
 </configuration>

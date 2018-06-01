@@ -4,33 +4,14 @@ package com.xiaomi.dao;
 import com.google.gson.Gson;
 import com.xiaomi.bean.Goods;
 import com.xiaomi.db.DBtools;
-import com.xiaomi.utils.DBUtils;
-import com.xiaomi.utils.PageBean;
 import org.apache.ibatis.session.SqlSession;
 
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class GoodsDao {
-    private static SqlSession sqlSession = null;
-    private static IGoodsDao mIGoodsDao = null;
 
-    public static IGoodsDao getmIGoodsDao() {
-        if (sqlSession == null) {
-            try {
-                sqlSession = DBtools.getSqlSession();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        if (mIGoodsDao == null) {
-            mIGoodsDao = sqlSession.getMapper(IGoodsDao.class);
-        }
-        return mIGoodsDao;
-    }
 
     /**
      * 通过用户id和店铺id查询购物车里边该商店的全部商品
@@ -59,9 +40,17 @@ public class GoodsDao {
 //        } finally {
 //            DBUtils.closeConnection();
 //        }
-
-        List<Goods> mGoodsList = getmIGoodsDao().selectByUserId(Integer.parseInt(UserId));
-
+        SqlSession sqlSession = null;
+        List<Goods> mGoodsList = new ArrayList<>();
+        try {
+            sqlSession = DBtools.getSqlSessionFactory().openSession();
+            mGoodsList = sqlSession.getMapper(IGoodsDao.class).selectByUserId(Integer.parseInt(UserId));
+            sqlSession.commit();
+        } finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
         return mGoodsList;
     }
 
@@ -80,9 +69,19 @@ public class GoodsDao {
 //        } finally {
 //            DBUtils.closeConnection();
 //        }
-        List<Integer> mStoreList = getmIGoodsDao().selectStoreIdByUserId(Integer.parseInt(UserId));
 
-        return mStoreList;
+        SqlSession sqlSession = null;
+        List<Integer> mStoreId = new ArrayList<>();
+        try {
+            sqlSession = DBtools.getSqlSessionFactory().openSession();
+            mStoreId = sqlSession.getMapper(IGoodsDao.class).selectStoreIdByUserId(Integer.parseInt(UserId));
+            sqlSession.commit();
+        } finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
+        return mStoreId;
     }
 
 

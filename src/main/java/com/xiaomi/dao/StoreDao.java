@@ -5,40 +5,33 @@ import com.google.gson.Gson;
 import com.xiaomi.bean.AppStore;
 import com.xiaomi.bean.Store;
 import com.xiaomi.db.DBtools;
-import com.xiaomi.utils.DBUtils;
 import com.xiaomi.utils.PageBean;
 import org.apache.ibatis.session.SqlSession;
 
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class StoreDao {
-    static SqlSession sqlSession = null;
-    static IStoreDao mIstoreDao = null;
 
-    private static IStoreDao getmIstoreDao() {
-        if (sqlSession == null) {
-            try {
-                sqlSession = DBtools.getSqlSession();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        if (mIstoreDao == null) {
-            mIstoreDao = sqlSession.getMapper(IStoreDao.class);
-        }
-        return mIstoreDao;
-    }
 
     public static AppStore getStoreListByStoreId(int StoreId) {
         AppStore mStore = null;
-        Store store = getmIstoreDao().selectStoreById(StoreId);
-        mStore = new AppStore();
-        mStore.setStoreName(store.getStoreName());
-        mStore.setStoreId(store.getStoreId());
+        SqlSession sqlSession = null;
+        Store store = null;
+        try {
+            sqlSession = DBtools.getSqlSessionFactory().openSession();
+            store = sqlSession.getMapper(IStoreDao.class).selectStoreById(StoreId);
+            mStore = new AppStore();
+            mStore.setStoreName(store.getStoreName());
+            mStore.setStoreId(store.getStoreId());
+            sqlSession.commit();
+        } finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
+
 
 //        String sql = "select * from store where StoreId=" + StoreId;
 //        ResultSet resultSet = DBUtils.getResultSet(sql);
@@ -56,12 +49,32 @@ public class StoreDao {
     }
 
     public static List<Store> loadAll() {
-        List<Store> mList = getmIstoreDao().selectAll();
+        SqlSession sqlSession = null;
+        List<Store> mList = new ArrayList<>();
+        try {
+            sqlSession = DBtools.getSqlSessionFactory().openSession();
+            mList =sqlSession.getMapper(IStoreDao.class).selectAll();
+            sqlSession.commit();
+        } finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
         return mList;
     }
 
     public static List<Store> loadListByPageAndSize(int page, int size) {
-        List<Store> mList = getmIstoreDao().selectByPageInterceptor(new PageBean((page - 1) * size, size));
+        SqlSession sqlSession = null;
+        List<Store> mList = new ArrayList<>();
+        try {
+            sqlSession = DBtools.getSqlSessionFactory().openSession();
+            mList =sqlSession.getMapper(IStoreDao.class).selectByPageInterceptor(new PageBean((page - 1) * size, size));
+            sqlSession.commit();
+        } finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
         return mList;
     }
 
@@ -72,7 +85,17 @@ public class StoreDao {
      * @return
      */
     public static Store getStoreByName(String storeName) {
-        Store store = getmIstoreDao().selectStoreByName(storeName);
+        SqlSession sqlSession = null;
+        Store store = null;
+        try {
+            sqlSession = DBtools.getSqlSessionFactory().openSession();
+            store =sqlSession.getMapper(IStoreDao.class).selectStoreByName(storeName);
+            sqlSession.commit();
+        } finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
         return store;
     }
 
